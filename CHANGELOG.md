@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-03
+
 ### Added
 
 - Ability to convert The Nether and The End.
@@ -13,5 +15,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 Initial release.
 
-[Unreleased]: https://github.com/pandier/polar-converter/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/pandier/polar-converter/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/pandier/polar-converter/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/pandier/polar-converter/commits/v0.1.0
