@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.3.0"
     id("com.gradleup.shadow") version "9.4.1"
+    id("org.jetbrains.changelog") version "2.5.0"
 }
 
 repositories {
@@ -21,4 +22,9 @@ tasks.jar {
     manifest {
         attributes["Main-Class"] = "io.github.pandier.polarconverter.MainKt"
     }
+}
+
+changelog {
+    groups.empty()
+    repositoryUrl.set("https://github.com/pandier/polar-converter")
 }
