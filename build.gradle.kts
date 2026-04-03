@@ -12,6 +12,7 @@ dependencies {
     implementation("com.github.ajalt.clikt:clikt:5.1.0")
     implementation("dev.hollowcube:polar:1.15.1")
     implementation("net.minestom:minestom:2026.03.25-1.21.11")
+    compileOnly("it.unimi.dsi:fastutil:8.5.18")
 }
 
 kotlin {

@@ -13,11 +13,13 @@ import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.clikt.parameters.types.path
-import net.hollowcube.polar.AnvilPolar
 import net.hollowcube.polar.ChunkSelector
+import net.hollowcube.polar.PolarReader
 import net.hollowcube.polar.PolarWorld
 import net.hollowcube.polar.PolarWriter
 import net.minestom.server.MinecraftServer
+import net.minestom.server.registry.RegistryKey
+import net.minestom.server.world.DimensionType
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.Arrays
@@ -33,7 +35,11 @@ class PolarConverter : CliktCommand() {
     val output: Path by argument("output", help = "Path to the output Polar file")
         .path()
 
-    val compression: PolarWorld.CompressionType by option("-c", "--compression", help = "Compression type")
+    val dimension: Dimension by option("--dim", "--dimension", help = "The dimension to convert")
+        .enum<Dimension> { it.name.lowercase() }
+        .default(Dimension.OVERWORLD)
+
+    val compression: PolarWorld.CompressionType by option("-c", "--comp", "--compression", help = "Compression type")
         .enum<PolarWorld.CompressionType> { it.name.lowercase() }
         .default(PolarWorld.CompressionType.ZSTD)
 
@@ -49,13 +55,30 @@ class PolarConverter : CliktCommand() {
 
         MinecraftServer.init()
 
-        val polarWorld = AnvilPolar.anvilToPolar(input, chunkSelector)
+        val path = dimension.folder?.let { input.resolve(it) } ?: input
+
+        println("Converting...")
+
+        val polarWorld = AnvilPolar.anvilToPolar(path.resolve("region"), dimension.minestom, chunkSelector)
         polarWorld.setCompression(compression)
 
-        val bytes = PolarWriter.write(polarWorld)
+        println("Writing...")
 
+        val bytes = PolarWriter.write(polarWorld)
         Files.write(output, bytes)
+
+        println("Verifying...")
+
+        PolarReader.read(Files.readAllBytes(output))
+
+        println("Done!")
     }
+}
+
+enum class Dimension(val folder: String?, val minestom: RegistryKey<DimensionType>) {
+    OVERWORLD(null, DimensionType.OVERWORLD),
+    THE_NETHER("DIM-1", DimensionType.THE_NETHER),
+    THE_END("DIM1", DimensionType.THE_END),
 }
 
 sealed class ChunkSelectionOptions : OptionGroup() {
